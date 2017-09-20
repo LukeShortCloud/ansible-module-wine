@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Test the "wine" Ansible module by checking the Wine version
+      wine:
+        path: "--version"
