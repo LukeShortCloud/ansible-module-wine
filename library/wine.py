@@ -96,7 +96,7 @@ def run_module():
     if rc in module.params['expected_return_code']:
         module.exit_json(**result)
     else:
-        module.fail_json(msg="Unexpected return code %s" % str(rc), **results)
+        module.fail_json(msg="Unexpected return code %s" % str(rc), **result)
 
 def main():
     run_module()
