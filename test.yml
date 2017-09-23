@@ -1,6 +1,12 @@
 ---
 - hosts: localhost
   tasks:
+    - name: Make sure that the "wine" module works without any checks
+      wine:
+        path: "--version"
+
     - name: Test the "wine" Ansible module by checking the Wine version
       wine:
         path: "--version"
+      register: wine_var
+      failed_when: "'wine-' not in wine_var.stdout"
