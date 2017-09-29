@@ -22,9 +22,9 @@ options:
         description:
             - A list of expected return codes. By default, both 0 (success) and 3010 (requires reboot) will be marked as successful return codes.
         required: false
-    path:
+    args:
         description:
-            - The full path to the Windows executable to run.
+            - A list including the path to a Windows executable to run and optional arguements.
         required: true
     wine_binary:
         description:
@@ -39,7 +39,9 @@ EXAMPLES = '''
 - name: Install a Windows program from a mounted ISO disc
   wine:
     wine_binary: /usr/bin/wine-2.0.2
-    path: /run/media/iso/Setup.exe
+    args:
+     - /run/media/iso/Setup.exe
+     - /q
     expected_return_code: [0, 800, 3010]
 '''
 
@@ -63,7 +65,7 @@ def run_module():
 
     module = AnsibleModule(
         argument_spec=dict(
-            path=dict(type='str', required=True),
+            args=dict(type='list', required=True),
             wine_binary=dict(type='str', required=False),
             # 0 = success, 3010 = requires reboot
             expected_return_code=dict(type='list', required=False, default=[0, 3010])
@@ -84,7 +86,7 @@ def run_module():
     )
 
     # Put together the full command that will be run on the managed sytem.
-    cmd = [wine_binary, module.params['path']]
+    cmd = [wine_binary] + module.params['args']
     # Run the command.
     rc, stdout, stderr = module.run_command(cmd)
 
